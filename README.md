@@ -1,126 +1,342 @@
-# Turborepo + Hono starter
+# Web + LeadCMS + Neon Template
 
-## What's inside?
+Plantilla profesional para tener **una landing / sitio web en Next.js** y un **CRM / CMS LeadCMS** conectado a **PostgreSQL en Neon**.  
+Ideal para montar rápido una web de marketing con gestor de contenido y leads totalmente administrable.
 
-This Turborepo includes the following packages/apps:
+---
 
-### Apps and Packages
+## Qué incluye
 
-- `api`: a [Hono](https://hono.dev/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### Apps y paquetes
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- `apps/web`: aplicación **Next.js 16** (React) para la web pública.
+- `apps/leadcms`: configuración de **LeadCMS Core** (Docker) como CMS/CRM.
+- `@repo/ui`: librería de componentes React compartidos.
+- `@repo/eslint-config`: configuración de ESLint (incluye `eslint-config-next` y `eslint-config-prettier`).
+- `@repo/typescript-config`: `tsconfig` compartidos en el monorepo.
 
-### Utilities
+Todo el código del monorepo está en **TypeScript** donde aplica.
 
-This Turborepo has some additional tools already setup for you:
+### Arquitectura
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```text
+┌───────────────────────────────────────────────────────────────┐
+│                        DOCKER COMPOSE                         │
+├────────────────────┬────────────────────┬─────────────────────┤
+│                    │                    │                     │
+│  WEB (Next.js)     │  LEADCMS (Core)    │  POSTGRES (Neon)    │
+│  Port: 3000        │  Port: 8080        │  Port: 5432         │
+│                    │                    │ (DB gestionada)     │
+│  - React / TS      │  - .NET + EF Core  │  - neondb           │
+│  - Tailwind (opc.) │  - API REST/Graph  │  - SSL by Neon      │
+│                    │                    │                     │
+└────────────────────┴────────────────────┴─────────────────────┘
+          │                       │
+          └─────────────── HTTP / HTTPS ───────────────────────┘
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+La app `web` consume contenido y datos de LeadCMS (que a su vez persiste todo en Neon).
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+---
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+## ✨ Características
 
-### Develop
+### 🧩 **CMS + CRM listo para usar**
 
-To develop all apps and packages, run the following commands:
+- LeadCMS como **backend de contenido y leads**:
+  - Entidades base: `Contact`, `Content`, `ContentType`, `Media`, `User`, `Setting`, `Redirect`, etc.
+  - Gestión de usuarios y roles (incluido Admin por defecto).
+  - Autenticación vía JWT.
 
-```
-cd my-turborepo
-vc link --repo # Connect your repository to Vercel
+- Configuración de entidades y lenguajes soportados vía `.env`:
+  - `ENTITIES__INCLUDE__*`
+  - `SUPPORTEDLANGUAGES__*`
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### 🌐 **Web en Next.js**
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+- Aplicación `apps/web` lista para:
+  - Conectarse a LeadCMS con `LEADCMS_URL` y `LEADCMS_API_KEY`.
+  - Consumir contenido generado en el CMS.
+  - Servirse con **Docker** en el puerto `3000`.
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### 🗄️ **Base de datos en Neon**
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+- Conexión directa a **PostgreSQL Neon**:
+  - Host similar a: `ep-xxxx.c-4.us-east-1.aws.neon.tech`
+  - Usuario: `neondb_owner`
+  - Base: `neondb`
+- Migraciones de LeadCMS se ejecutan contra Neon al arrancar el contenedor.
+- Todo lo que haces en el admin (`/users`, `/content`, etc.) queda persistido en Neon.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+### 🔐 **Seguridad y JWT**
 
-### Remote Caching
+- Configuración de JWT vía `.env` en `apps/leadcms`:
+  - `JWT__SECRET`
+  - `JWT__ISSUER`
+  - `JWT__AUDIENCE`
+- Clave JWT reutilizada como API key para que `web` consuma LeadCMS:
+  - `LEADCMS_API_KEY` en `apps/web/.env`.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+---
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+## 🚀 Quick Start (5 minutos con Docker)
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+### Prerrequisitos
 
-```
-cd my-turborepo
+- **Docker Desktop** (incluye Docker Compose).
+- **Node.js 20+** (opcional, para desarrollo sin Docker).
+- Cuenta en **Neon** con una base creada (por ejemplo `neondb`).
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+### 1. Clonar el repositorio
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+git clone <tu-repo-url>
+cd template-de-web-y-admin-panel
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### 2. Configurar Neon
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+En el panel de Neon:
 
+- Crea un proyecto y una base de datos (por ejemplo `neondb`).
+- Anota:
+  - Host (sin el sufijo `-pooler`).
+  - Usuario `neondb_owner` (o el que uses).
+  - Password.
+  - Nombre de base de datos.
+
+### 3. Configurar LeadCMS (`apps/leadcms/.env`)
+
+Si no existe, puedes basarte en `.env.sample`. Clave crítica: **usar el host directo, no el pooler**.
+
+Ejemplo:
+
+```env
+# JWT
+JWT__SECRET=...clavemuyLARGA...
+JWT__ISSUER=leadcms-issuer
+JWT__AUDIENCE=leadcms-audience
+
+# Admin por defecto
+DEFAULTUSERS__0__USERNAME=admin
+DEFAULTUSERS__0__EMAIL=admin@yourdomain.com
+DEFAULTUSERS__0__PASSWORD=tu-password-segura
+DEFAULTUSERS__0__ROLES__0=Admin
+
+# Postgres (Neon)
+POSTGRES__SERVER=ep-tu-endpoint.c-4.us-east-1.aws.neon.tech   # sin -pooler
+POSTGRES__PORT=5432
+POSTGRES__USERNAME=neondb_owner
+POSTGRES__PASSWORD=tuPasswordNeon
+POSTGRES__DATABASE=neondb
+
+# CORS
+CORS__ALLOWEDORIGINS__0=http://localhost:8080
+CORS__ALLOWEDORIGINS__1=http://localhost:3000
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+> **Importante**: evita usar el host con `-pooler` porque LeadCMS usa advisory locks de Postgres y el pooler puede generar errores tipo  
+> `Attempted to release a lock that was not held`.
+
+### 4. Configurar la web (`apps/web/.env`)
+
+Ejemplo:
+
+```env
+LEADCMS_URL=http://leadcms:80
+LEADCMS_API_KEY=<mismo JWT__SECRET de leadcms>
+LEADCMS_DEFAULT_LANGUAGE=en
+LEADCMS_CONTENT_DIR=.leadcms/content
+LEADCMS_MEDIA_DIR=public/media
+LEADCMS_ENABLE_DRAFTS=false
+
+# Conexión directa a Neon (opcional para utilidades de la web)
+NEON_DATABASE_URL=postgresql://neondb_owner:<password>@ep-tu-endpoint.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
 ```
 
-## Useful Links
+### 5. Levantar todo con Docker
 
-Learn more about the power of Turborepo:
+Desde la raíz del proyecto:
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+```bash
+docker compose up -d
+```
+
+Esto levanta:
+
+- `leadcms` → `http://localhost:8080`
+- `web` → `http://localhost:3000`
+
+### 6. Acceder a las apps
+
+- **LeadCMS Admin**: `http://localhost:8080`
+  - Usuario: el de `DEFAULTUSERS__0__USERNAME`
+  - Password: el de `DEFAULTUSERS__0__PASSWORD`
+
+- **Web pública**: `http://localhost:3000`
+
+### 7. Verificar en Neon
+
+En el dashboard de Neon (SQL editor), ejecuta:
+
+```sql
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+ORDER BY table_name;
+```
+
+Deberías ver tablas como `_migrations`, `users`, `content`, `media`, etc.
+
+---
+
+## 🧱 Estructura del proyecto
+
+```text
+template-de-web-y-admin-panel/
+├── apps/
+│   ├── web/                # Next.js app (sitio público)
+│   │   ├── app/            # Rutas / páginas
+│   │   ├── public/
+│   │   ├── .env
+│   │   └── Dockerfile
+│   └── leadcms/            # Config de despliegue de LeadCMS
+│       ├── .env
+│       ├── .env.sample
+│       ├── docker-compose.yml   # Ejemplo solo-LeadCMS
+│       ├── generate-env.*       # Scripts para generar .env
+│       ├── pg-backup.*          # Scripts de backup
+│       └── pg-restore.*         # Scripts de restore
+├── packages/
+│   ├── ui/
+│   ├── eslint-config/
+│   └── typescript-config/
+├── docker-compose.yml       # Orquestación web + LeadCMS
+├── package.json
+├── pnpm-workspace.yaml
+├── turbo.json
+└── README.md
+```
+
+---
+
+## 🔧 Desarrollo sin Docker (opcional)
+
+Si prefieres desarrollar la web sin Docker (solo usando LeadCMS en contenedor):
+
+1. Levanta solo LeadCMS con Docker (desde `apps/leadcms` o usando el `docker-compose.yml` raíz).
+2. En `apps/web/.env`, apunta `LEADCMS_URL` al host correcto (por ejemplo `http://localhost:8080` si expones el contenedor así).
+3. Desde la raíz:
+
+```bash
+pnpm install
+pnpm dev --filter=web
+```
+
+La web quedará en `http://localhost:3000` usando LeadCMS como backend.
+
+---
+
+## 🐘 Scripts útiles de Postgres (LeadCMS)
+
+En `apps/leadcms` tienes scripts para gestionar backups/restauraciones usando las credenciales del `.env`:
+
+- **Backup completo**:
+
+  ```bash
+  ./pg-backup.sh leadcms
+  # o en Windows
+  .\pg-backup.ps1 leadcms
+  ```
+
+- **Restore desde backup**:
+
+  ```bash
+  ./pg-restore.sh leadcms backup.sql
+  # o en Windows
+  .\pg-restore.ps1 leadcms backup.sql
+  ```
+
+Estos scripts leen los datos de conexión del `.env`, por lo que funcionarán contra Neon si allí están tus credenciales.
+
+---
+
+## ⚙️ Variables de entorno principales
+
+### LeadCMS (`apps/leadcms/.env`)
+
+| Variable                         | Descripción                                 |
+| -------------------------------- | ------------------------------------------- |
+| `JWT__SECRET`                    | Clave para firmar tokens JWT (muy larga)   |
+| `JWT__ISSUER`                    | Issuer de los tokens                        |
+| `JWT__AUDIENCE`                  | Audience de los tokens                      |
+| `DEFAULTUSERS__0__USERNAME`     | Usuario admin por defecto                   |
+| `DEFAULTUSERS__0__PASSWORD`     | Password admin inicial                      |
+| `DEFAULTUSERS__0__EMAIL`        | Email admin inicial                         |
+| `POSTGRES__SERVER`              | Host de Neon (sin `-pooler`)                |
+| `POSTGRES__PORT`                | Puerto Postgres (normalmente 5432)          |
+| `POSTGRES__USERNAME`            | Usuario Neon                                |
+| `POSTGRES__PASSWORD`            | Password Neon                               |
+| `POSTGRES__DATABASE`            | Base de datos (ej. `neondb`)                |
+| `CORS__ALLOWEDORIGINS__*`       | Orígenes permitidos (`http://localhost:3000`) |
+
+### Web (`apps/web/.env`)
+
+| Variable                      | Descripción                                   |
+| ----------------------------- | --------------------------------------------- |
+| `LEADCMS_URL`                | URL interna del servicio LeadCMS              |
+| `LEADCMS_API_KEY`           | API key / JWT secret para autenticar contra CMS |
+| `LEADCMS_DEFAULT_LANGUAGE`   | Idioma por defecto (`en`, `es`, etc.)         |
+| `LEADCMS_CONTENT_DIR`        | Carpeta local donde se guardan contenidos     |
+| `LEADCMS_MEDIA_DIR`          | Carpeta para media estático                   |
+| `LEADCMS_ENABLE_DRAFTS`      | Si se usan borradores o solo publicado        |
+| `NEON_DATABASE_URL`          | (Opcional) URL de conexión directa a Neon     |
+
+---
+
+## 🧪 Comandos Docker frecuentes
+
+```bash
+# Levantar servicios
+docker compose up
+
+# Levantar en segundo plano
+docker compose up -d
+
+# Ver estado
+docker compose ps
+
+# Ver logs
+docker compose logs -f
+docker compose logs -f leadcms
+docker compose logs -f web
+
+# Reiniciar servicios
+docker compose restart
+docker compose restart leadcms
+
+# Bajar servicios
+docker compose down
+```
+
+---
+
+## 🐛 Troubleshooting rápido
+
+- **LeadCMS en bucle con errores de lock**  
+  - Asegúrate de que `POSTGRES__SERVER` **no** usa el host con `-pooler`.  
+  - Usa el endpoint directo de Neon.
+
+- **`http://localhost:8080` no responde**  
+  - Revisa con `docker compose logs leadcms`.  
+  - Confirma que las credenciales de Neon son correctas y la IP no está bloqueada.
+
+- **La web en `3000` no puede hablar con LeadCMS**  
+  - Verifica `LEADCMS_URL` y `LEADCMS_API_KEY` en `apps/web/.env`.  
+
+---
+
+## 📄 Licencia
+
+Puedes adaptar este proyecto libremente para tus propios sitios y CRM internos. Asegúrate de revisar las licencias de LeadCMS y de cualquier otro servicio externo (Neon, etc.) al usarlo en producción.
+
