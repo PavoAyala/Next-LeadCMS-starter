@@ -1,0 +1,26 @@
+[
+  {
+    "id": 0,
+    "createdAt": "2023-01-15T17:32:02.074179Z",
+    "updatedAt": null,
+    "authorName": "Author Name 2",
+    "authorEmail": "contact2@test2.net",
+    "body": "TestContent2",
+    "commentableId": 1,
+    "commentableType": "Content",
+    "parentId": null,
+    "key": "key1"
+  },
+  {
+    "id": 1,
+    "createdAt": "2023-01-15T17:32:02.074179Z",
+    "updatedAt": "2023-01-15T17:32:02.074179Z",
+    "authorName": "Author Name 1",
+    "authorEmail": "contact1@test1.net",
+    "body": "TestContent1",
+    "commentableId": 1,
+    "commentableType": "Content",
+    "parentId": null,
+    "key": "key2"
+  }
+]

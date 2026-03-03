@@ -1,0 +1,47 @@
+[
+  {
+    "id": null,
+    "orderRefNo": "1000",
+    "createdAt": "2023-01-15T17:32:02.074179Z",
+    "updatedAt": null,
+    "orderId": null,
+    "lineNumber": 1,
+    "productName": "compositeProduct1",
+    "unitPrice": 10,
+    "currency": "usd",
+    "quantity": 100,
+    "updatedByIp": "127.0.0.0",
+    "updatedByUserAgent": null,
+    "createdByIp": null
+  },
+  {
+    "id": null,
+    "orderRefNo": "1000",
+    "createdAt": "2023-01-15T17:32:02.074179Z",
+    "updatedAt": null,
+    "orderId": null,
+    "lineNumber": 1,
+    "productName": "compositeProduct1Dup",
+    "unitPrice": 99,
+    "currency": "usd",
+    "quantity": 999,
+    "updatedByIp": "127.0.0.0",
+    "updatedByUserAgent": null,
+    "createdByIp": null
+  },
+  {
+    "id": null,
+    "orderRefNo": "1000",
+    "createdAt": "2023-01-15T17:32:02.074179Z",
+    "updatedAt": null,
+    "orderId": null,
+    "lineNumber": 2,
+    "productName": "compositeProduct2",
+    "unitPrice": 20,
+    "currency": "usd",
+    "quantity": 200,
+    "updatedByIp": "127.0.0.0",
+    "updatedByUserAgent": null,
+    "createdByIp": null
+  }
+]

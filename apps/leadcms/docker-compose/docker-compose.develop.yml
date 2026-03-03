@@ -1,0 +1,61 @@
+version: "3.4"
+
+services:
+  elastic:
+    container_name: elastic
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.27
+    ports:
+      - 9200:9200
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+    restart: unless-stopped
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.17.27
+    ports:
+      - 5601:5601
+    depends_on:
+      - elastic
+    environment:
+      SERVER_REWRITEBASEPATH: true
+      SERVER_BASEPATH: /kibana
+      ELASTICSEARCH_HOSTS: '["http://elastic:9200"]'
+    restart: unless-stopped
+
+  postgres:
+    container_name: postgres
+    image: postgres:14.5
+    environment:
+      TZ: "UTC"
+      PGTZ: "UTC"
+      POSTGRES_DB: LeadCMS
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  mailpit:
+    container_name: mailpit
+    image: axllent/mailpit:latest
+    environment:
+      MP_UI_AUTH_FILE: /tmp/mailpit_auth
+      MP_UI_BIND_ADDR: 0.0.0.0:8025
+      MP_SMTP_BIND_ADDR: 0.0.0.0:1025
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web
+    volumes:
+      - ./mailpit_auth:/tmp/mailpit_auth:ro
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  elastic-data:

@@ -279,6 +279,13 @@ Estos scripts leen los datos de conexión del `.env`, por lo que funcionarán co
 | `POSTGRES__PASSWORD`            | Password Neon                               |
 | `POSTGRES__DATABASE`            | Base de datos (ej. `neondb`)                |
 | `CORS__ALLOWEDORIGINS__*`       | Orígenes permitidos (`http://localhost:3000`) |
+| `IDENTITY__REQUIREDIGIT`        | (Opcional) Bypass de política: `false` para no exigir números |
+| `IDENTITY__REQUIREUPPERCASE`    | (Opcional) Bypass de política: `false` para no exigir mayúsculas |
+| `IDENTITY__REQUIRELOWERCASE`    | (Opcional) Bypass de política: `false` para no exigir minúsculas |
+| `IDENTITY__REQUIRENONALPHANUMERIC`| (Opcional) Bypass de política: `false` para no exigir caracteres especiales |
+| `IDENTITY__REQUIREDLENGTH`      | (Opcional) Bypass de política: Longitud mínima de contraseña (ej. `5`) |
+
+> **Nota sobre Contraseñas:** Por defecto, LeadCMS usa las políticas estrictas de ASP.NET Core (mínimo 6 caracteres, mayúscula, minúscula, número y símbolo). Si deseas usar una contraseña simple de desarrollo como `admin`, debes añadir las variables `IDENTITY__*` a tu `.env` para saltarte estas reglas antes de levantar el contenedor por primera vez.
 
 ### Web (`apps/web/.env`)
 
