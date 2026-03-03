@@ -48,37 +48,29 @@ export default async function Home() {
         <div className={styles.ctas}>
           <a
             className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
+            href="https://next-leadcms-starter-production.up.railway.app"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            Abrir LeadCMS Panel
           </a>
           <a
-            href="https://turborepo.com/docs?utm_source"
+            href="https://github.com/PavoAyala/template-de-web-y-admin-panel"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.secondary}
           >
-            Read our docs
+            Ver Repositorio
           </a>
         </div>
-        <div className={styles.result}>
-          <h3>
-            API Response from{' '}
-            <a href={API_URL} target="_blank" rel="noreferrer">
-              <code>{API_URL}</code>
-            </a>
-            :
-          </h3>
-          <pre>{result}</pre>
+
+        <div className={styles.result} style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+          <h3>Credenciales admin por defecto:</h3>
+          <pre style={{ marginTop: '1rem', background: 'rgba(0,0,0,0.5)', padding: '1rem', borderRadius: '8px' }}>
+            {`URL: https://next-leadcms-starter-production.up.railway.app
+Usuario: admin@yourdomain.com
+Password: admin`}
+          </pre>
         </div>
       </main>
       <footer className={styles.footer}>
