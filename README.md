@@ -1,5 +1,10 @@
 # Web + LeadCMS + Neon Template
 
+![version](https://img.shields.io/badge/version-1.0.0-purple)
+![license](https://img.shields.io/badge/license-MIT-green)
+![node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)
+![docker](https://img.shields.io/badge/docker-ready-blue)
+
 Plantilla profesional para tener **una landing / sitio web en Next.js** y un **CRM / CMS LeadCMS** conectado a **PostgreSQL en Neon**.  
 Ideal para montar rápido una web de marketing con gestor de contenido y leads totalmente administrable.
 
