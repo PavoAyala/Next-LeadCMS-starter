@@ -351,4 +351,3 @@ docker compose down
 ## 📄 Licencia
 
 Puedes adaptar este proyecto libremente para tus propios sitios y CRM internos. Asegúrate de revisar las licencias de LeadCMS y de cualquier otro servicio externo (Neon, etc.) al usarlo en producción.
-
